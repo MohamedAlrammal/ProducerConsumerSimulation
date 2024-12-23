@@ -1,12 +1,9 @@
-import logo from './logo.svg';
-import './App.css';
-
+import React from "react";
+import SimulationCanvas from "./components/simulation/SimulationCanvas";
 function App() {
-  return (
-    <div className="App">
-      
-    </div>
-  );
+return(
+  <SimulationCanvas />
+);
 }
 
 export default App;

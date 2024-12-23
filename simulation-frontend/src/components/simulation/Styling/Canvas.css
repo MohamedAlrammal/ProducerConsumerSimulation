@@ -1,0 +1,42 @@
+.react-flow {
+    
+  }
+
+  .react-flow__background{
+    background-color: #FFF0DC;
+  }
+
+  .buttons{
+    position: fixed;
+    top: 10px;
+    width: 100%;
+  }
+
+  .queueButton{
+    width: 45%;
+    height: 45px;
+    background-color: #131010;
+    border: none;
+    outline: none;
+    border-radius: 40px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    color: #FFF0DC;
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  .machineButton{
+    width: 45%;
+    margin-left: 10%;
+    height: 45px;
+    background-color: #543A14;
+    border: none;
+    outline: none;
+    border-radius: 40px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    color: #FFF0DC;
+    font-size: 16px;
+    font-weight: 700;
+  }

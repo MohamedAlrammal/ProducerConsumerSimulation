@@ -1,0 +1,28 @@
+.controls{
+    position: fixed;
+    bottom: 10px;
+    border: 2px solid black;
+    background-color:rgb(84, 58, 20,0.7);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    width: 600px;
+}
+
+.controls button{
+    background-color: #131010;
+    color: #FFF0DC;
+    cursor: pointer;
+    height: 100%;
+    width: 180px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 3px;
+    border-radius: 20px;
+}
+
+.controls button:hover{
+    background-color: #3d3838;
+}
+
+
+

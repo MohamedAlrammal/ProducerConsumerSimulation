@@ -73,6 +73,11 @@ function SimulationCanvas() {
     ]);
   };
 
+  const deleteNode = (nodeId) => {
+    setNodes((nds) => nds.filter((node) => node.id !== nodeId));
+    setEdges((eds) => eds.filter((edge) => edge.source !== nodeId && edge.target !== nodeId));
+  };
+
   console.log(edges);
   console.log(queues)
 
@@ -92,6 +97,17 @@ function SimulationCanvas() {
         <Controls />
         <Background />
       </ReactFlow>
+      <div className="delete-nodes">
+        <h3 className="header">Nodes</h3>
+        <ul>
+          {nodes.map((node) => (
+            <li key={node.id}>
+              {node.data.label}{" "}
+              <button onClick={() => deleteNode(node.id)}>Delete</button>
+            </li>
+          ))}
+        </ul>
+      </div>
       <div className="buttons">
         <button className="queueButton" onClick={addQueue}>Add Queue</button>
         <button className="machineButton" onClick={addMachine}>Add Machine</button>

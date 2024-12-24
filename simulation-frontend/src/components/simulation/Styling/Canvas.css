@@ -40,3 +40,39 @@
     font-size: 16px;
     font-weight: 700;
   }
+
+  .delete-nodes{
+    position: fixed;
+    background-color:rgb(84, 58, 20,0.7);
+    backdrop-filter: blur(20px);
+    left: 10px;
+    top: 100px;
+    border: 2px solid black;
+    border-radius: 20px;
+    width: 200px;
+    height: 400px;
+    overflow-y: auto;
+  }
+  
+  .header{
+    text-align: center;
+  }
+
+  .delete-nodes button{
+    width: 45%;
+    height: 25px;
+    margin-bottom: 10px;
+    background-color: #131010;
+    border: none;
+    outline: none;
+    border-radius: 40px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    color: #FFF0DC;
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  .delete-nodes button:hover{
+    background-color: #3d3838;
+  }

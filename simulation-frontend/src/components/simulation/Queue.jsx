@@ -20,7 +20,7 @@ function QueueNode({ data}) {
       <div>
         {data.label && <p>{data.label}</p>}
         <label htmlFor="text">Text:</label>
-        <input id="text" name="text" onChange={onChange} className="nodrag" />
+        <input id="text" name="Number of Products" onChange={onChange} type="range" min={0} max={100} className='nodrag'/>
       </div>
       <Handle
         type="source"

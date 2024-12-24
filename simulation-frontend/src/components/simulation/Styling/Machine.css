@@ -1,8 +1,15 @@
 .machineNode{
     border: 2px solid  black;
-    border-radius: 20px;
+    border-radius: 100%;
     padding: 10px;
     background-color: rgb(84, 58, 20,0.7);
     backdrop-filter: blur(20px);
     color: #fff;
+    width: 100px;
+    height: 90px;
+    
+}
+
+.machineNode p{
+    text-align: center;
 }

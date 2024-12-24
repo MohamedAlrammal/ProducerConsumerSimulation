@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import {
   addEdge,
   MiniMap,
@@ -9,21 +9,14 @@ import {
   applyEdgeChanges,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import QueueNode from "./Queue";
-import MachineNode from "./Machine";
+import { nodeTypes } from "./index";
 import "./Styling/Canvas.css";
 
-const nodeTypes = {
-  "Queue-Node": QueueNode,
-  "Machine-Node": MachineNode,
-};
 
-function SimulationCanvas() {
-  const [nodes, setNodes] = useState([]); // Single source of truth for nodes
-  const [edges, setEdges] = useState([]);
-  const [queues, setQueues] = useState([]); // Derived state
-  const [machines, setMachines] = useState([]); // Derived state
 
+
+function SimulationCanvas({nodes ,setNodes,edges , setEdges , queues , setQueues , machines , setMachines}) {
+  
   // Sync queues and machines whenever nodes change
   useEffect(() => {
     const updatedQueues = nodes.filter((node) => node.type === "Queue-Node");

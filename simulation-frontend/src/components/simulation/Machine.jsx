@@ -19,6 +19,7 @@ function MachineNode({ data, isConnectable }) {
       />
       <div>
         {data.label && <p>{data.label}</p>}
+        <p>Status:</p>
       </div>
       <Handle
         type="source"

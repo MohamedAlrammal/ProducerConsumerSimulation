@@ -6,3 +6,12 @@
     backdrop-filter: blur(30px);
     color: #fff;
 }
+
+.queueNode p{
+    text-align: center;
+    font-weight: 500;
+}
+
+.queueNode input{
+    border-radius: 20px;
+}

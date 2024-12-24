@@ -3,7 +3,7 @@ import { Handle, Position } from '@xyflow/react';
 import "./Styling/Queue.css";
 
  
-function QueueNode({ data}) {
+function EndQueue({ data}) {
   const onChange = useCallback((evt) => {
     console.log(evt.target.value);
   }, []);
@@ -17,17 +17,12 @@ function QueueNode({ data}) {
       />
       <div>
         {data.label && <p>{data.label}</p>}
-        <label htmlFor="text">Products in {data.label}: </label>
+        <label htmlFor="text">Products Finished: </label>
         
       </div>
-      <Handle
-        type="source"
-        position={Position.Left}
-        
-      />
     </div>
   );
 }
 
  
-export default QueueNode;
+export default EndQueue;

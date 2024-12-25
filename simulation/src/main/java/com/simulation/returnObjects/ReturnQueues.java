@@ -2,14 +2,24 @@ package com.simulation.returnObjects;
 
 import com.simulation.Objects.Queue;
 
+import java.util.ArrayList;
 import java.util.List;
 
-
 public class ReturnQueues {
-    private List<returnQueue>queues;
+    private static ReturnQueues instance; // Singleton instance
+    private List<returnQueue> queues;
 
-    public ReturnQueues(List<returnQueue> queues) {
-        this.queues = queues;
+    // Private constructor to prevent external instantiation
+    private ReturnQueues() {
+        this.queues = new ArrayList<>();
+    }
+
+    // Public method to get the Singleton instance
+    public static synchronized ReturnQueues getInstance() {
+        if (instance == null) {
+            instance = new ReturnQueues();
+        }
+        return instance;
     }
 
     public List<returnQueue> getQueues() {
@@ -17,9 +27,10 @@ public class ReturnQueues {
     }
 
     public void setQueues(List<Queue> queueList) {
-        for(Queue q:queueList){
-           this.queues.add(new returnQueue(q.getId(),q.getNoofProducts()));
+        queues.clear(); // Clear existing queues to avoid duplicates
+        for (Queue q : queueList) {
+            this.queues.add(new returnQueue(q.getId(), q.getNoofProducts()));
         }
     }
-
 }
+

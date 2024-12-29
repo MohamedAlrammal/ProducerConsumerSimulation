@@ -1,31 +1,31 @@
 package com.simulation.Objects;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.List;
 
 public class ObjectsRequest {
-    @JsonProperty("queues")
-    private queues queues;
-    @JsonProperty("machines")
-    private machines machines;
 
-    public ObjectsRequest(queues queues,machines machines) {
+    private List<Queue> queues;
+    private List<Machine> machines;
+
+    public ObjectsRequest(List<Queue> queues, List<Machine> machines) {
         this.queues = queues;
         this.machines = machines;
     }
 
-    public queues getQueues() {
+    public List<Queue> getQueues() {
         return queues;
     }
 
-    public void setQueues(queues queues) {
+    public void setQueues(List<Queue> queues) {
         this.queues = queues;
     }
 
-    public machines getMachines() {
+    public List<Machine> getMachines() {
         return machines;
     }
 
-    public void setMachines(machines machines) {
+    public void setMachines(List<Machine> machines) {
         this.machines = machines;
     }
 }

@@ -1,27 +1,31 @@
 package com.simulation.returnObjects;
 
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 public class ObjectsAnswer {
-    private ReturnQueues returnQueues;
-    private ReturnMacines returnMacines;
+    private List<returnQueue> queues;
+    private List<returnMachine> machines;
 
-    public ObjectsAnswer(ReturnQueues returnQueues, ReturnMacines returnMacines) {
-        this.returnQueues = returnQueues;
-        this.returnMacines = returnMacines;
+    public ObjectsAnswer(List<returnQueue> queues, List<returnMachine> machines) {
+        this.queues = queues;
+        this.machines = machines;
     }
 
-    public ReturnQueues getReturnQueues() {
-        return returnQueues;
+    public List<returnQueue> getQueues() {
+        return queues;
     }
 
-    public void setReturnQueues(ReturnQueues returnQueues) {
-        this.returnQueues = returnQueues;
+    public void setQueues(List<returnQueue> queues) {
+        this.queues = queues;
     }
 
-    public ReturnMacines getReturnMacines() {
-        return returnMacines;
+    public List<returnMachine> getMachines() {
+        return machines;
     }
 
-    public void setReturnMacines(ReturnMacines returnMacines) {
-        this.returnMacines = returnMacines;
+    public void setMachines(List<returnMachine> machines) {
+        this.machines = machines;
     }
+
 }

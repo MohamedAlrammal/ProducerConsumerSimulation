@@ -27,7 +27,7 @@ public class ReturnQueues {
     }
 
     public void setQueues(List<Queue> queueList) {
-        queues.clear(); // Clear existing queues to avoid duplicates
+
         for (Queue q : queueList) {
             this.queues.add(new returnQueue(q.getId(), q.getNoofProducts()));
         }

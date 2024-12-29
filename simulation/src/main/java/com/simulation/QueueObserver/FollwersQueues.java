@@ -1,6 +1,7 @@
 package com.simulation.QueueObserver;
 
 import com.simulation.Objects.Queue;
+import com.simulation.returnObjects.ReturnMacines;
 import com.simulation.returnObjects.ReturnQueues;
 import com.simulation.returnObjects.returnQueue;
 
@@ -11,6 +12,7 @@ public class FollwersQueues implements Observer {
     private List<Queue> Follwer;
     ReturnQueues returnQueues =ReturnQueues.getInstance();
     private List<returnQueue>returnQueueList=returnQueues.getQueues();
+    ReturnMacines returnMacines =ReturnMacines.getInstance();
 
     public void setFollwer(List<Queue> Follwer) {
         this.Follwer=Follwer;

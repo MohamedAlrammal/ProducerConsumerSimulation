@@ -27,7 +27,6 @@ public class ReturnMacines {
     }
 
     public void setMachines(List<Machine> machinesList) {
-        machines.clear(); // Clear existing machines to avoid duplicates
         int i = 1;
         for (Machine m : machinesList) {
             this.machines.add(new returnMachine(m.getId(), false, i));

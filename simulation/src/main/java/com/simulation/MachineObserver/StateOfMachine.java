@@ -2,6 +2,7 @@ package com.simulation.MachineObserver;
 
 import com.simulation.Objects.Machine;
 import com.simulation.returnObjects.ReturnMacines;
+import com.simulation.returnObjects.ReturnQueues;
 import com.simulation.returnObjects.returnMachine;
 
 import java.util.List;

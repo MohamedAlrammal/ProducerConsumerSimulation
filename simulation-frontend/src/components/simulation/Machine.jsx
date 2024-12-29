@@ -1,17 +1,29 @@
-import { useCallback } from 'react';
-import { Handle, Position } from '@xyflow/react';
+
+import { Background, Handle, Position } from '@xyflow/react';
 import "./Styling/Machine.css";
 
  
-const handleStyle = { left: 10 };
+
  
 function MachineNode({ data, isConnectable }) {
-  const onChange = useCallback((evt) => {
-    console.log(evt.target.value);
-  }, []);
+ 
+  // Formula to map numbers to colors
+  const getColorByFormula = (code) => {
+    const red = (code * 50) % 256;
+    const green = (code * 80) % 256;
+    const blue = (code * 120) % 256;
+    return `rgb(${red}, ${green}, ${blue} , 0.8)`;
+  };
+
+  const isOn = data.status === "on";
+
+  const inlineStyles = {
+    backgroundColor: getColorByFormula(data.color),
+    animation: "colorPulse 2s infinite", // Pulse animation
+  };
  
   return (
-    <div className="machineNode">
+    <div className="machineNode" style={isOn ? inlineStyles : undefined} >
       <Handle
         type="target"
         position={Position.Right}
@@ -19,7 +31,7 @@ function MachineNode({ data, isConnectable }) {
       />
       <div>
         {data.label && <p>{data.label}</p>}
-        <p>Status:</p>
+        <p>Status: <strong>{data.status}</strong></p>
       </div>
       <Handle
         type="source"

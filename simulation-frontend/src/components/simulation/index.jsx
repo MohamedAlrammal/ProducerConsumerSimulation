@@ -15,6 +15,7 @@ export const initialNodes = [
         position:{x:0 , y: 100},
         data: { label: `End` },
          }, 
+
 ];
 
 export const nodeTypes = {

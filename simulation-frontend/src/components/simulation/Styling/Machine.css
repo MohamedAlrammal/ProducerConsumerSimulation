@@ -13,3 +13,18 @@
 .machineNode p{
     text-align: center;
 }
+
+@keyframes colorPulse {
+    0% {
+      transform: scale(1); /* Normal size */
+      filter: brightness(100%); /* Normal brightness */
+    }
+    50% {
+      transform: scale(1.05); /* Slightly larger */
+      filter: brightness(120%); /* Brighter */
+    }
+    100% {
+      transform: scale(1); /* Back to normal size */
+      filter: brightness(100%); /* Back to normal brightness */
+    }
+  }

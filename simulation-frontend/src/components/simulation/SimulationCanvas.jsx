@@ -41,26 +41,26 @@ function SimulationCanvas({nodes ,setNodes,edges , setEdges , queues , setQueues
   );
 
   const addQueue = () => {
-    const id = `q-${queues.length}`;
+    const id = `q${queues.length}`;
     setNodes((nds) => [
       ...nds,
       {
         id,
         type: "Queue-Node",
-        data: { label: `Queue ${queues.length}` },
+        data: { label: `Queue ${queues.length}` , products: 0},
         position: { x: Math.random() * 400, y: Math.random() * 400 },
       },
     ]);
   };
 
   const addMachine = () => {
-    const id = `m-${machines.length}`;
+    const id = `m${machines.length}`;
     setNodes((nds) => [
       ...nds,
       {
         id,
         type: "Machine-Node",
-        data: { label: `Machine ${machines.length}` },
+        data: { label: `Machine ${machines.length}` , status:`off`},
         position: { x: Math.random() * 400, y: Math.random() * 400 },
       },
     ]);

@@ -1,13 +1,9 @@
-import { useCallback } from 'react';
 import { Handle, Position } from '@xyflow/react';
 import "./Styling/Queue.css";
 
  
-function QueueNode({ data}) {
-  const onChange = useCallback((evt) => {
-    console.log(evt.target.value);
-  }, []);
- 
+function QueueNode({data}) {
+  
   return (
     <div className="queueNode">
       <Handle
@@ -17,7 +13,7 @@ function QueueNode({ data}) {
       />
       <div>
         {data.label && <p>{data.label}</p>}
-        <label htmlFor="text">Products in {data.label}: </label>
+        <label htmlFor="text">Products in {data.label}: <strong>{data.products}</strong>  </label>
         
       </div>
       <Handle

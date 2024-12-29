@@ -47,7 +47,7 @@ function SimulationCanvas({nodes ,setNodes,edges , setEdges , queues , setQueues
       {
         id,
         type: "Queue-Node",
-        data: { label: `Queue ${queues.length}` },
+        data: { label: `Queue ${queues.length}` , products: 0},
         position: { x: Math.random() * 400, y: Math.random() * 400 },
       },
     ]);
@@ -60,7 +60,7 @@ function SimulationCanvas({nodes ,setNodes,edges , setEdges , queues , setQueues
       {
         id,
         type: "Machine-Node",
-        data: { label: `Machine ${machines.length}` },
+        data: { label: `Machine ${machines.length}` , status:`off`},
         position: { x: Math.random() * 400, y: Math.random() * 400 },
       },
     ]);

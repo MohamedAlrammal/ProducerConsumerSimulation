@@ -1,12 +1,10 @@
-import { useCallback } from 'react';
 import { Handle, Position } from '@xyflow/react';
 import "./Styling/Queue.css";
 
  
 function EndQueue({ data}) {
-  const onChange = useCallback((evt) => {
-    console.log(evt.target.value);
-  }, []);
+  
+  
  
   return (
     <div className="queueNode">

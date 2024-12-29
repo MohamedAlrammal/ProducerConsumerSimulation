@@ -41,7 +41,7 @@ function SimulationCanvas({nodes ,setNodes,edges , setEdges , queues , setQueues
   );
 
   const addQueue = () => {
-    const id = `q-${queues.length}`;
+    const id = `q${queues.length}`;
     setNodes((nds) => [
       ...nds,
       {
@@ -54,7 +54,7 @@ function SimulationCanvas({nodes ,setNodes,edges , setEdges , queues , setQueues
   };
 
   const addMachine = () => {
-    const id = `m-${machines.length}`;
+    const id = `m${machines.length}`;
     setNodes((nds) => [
       ...nds,
       {

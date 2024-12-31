@@ -1,5 +1,7 @@
 package com.simulation.Objects;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Queue {
@@ -7,14 +9,35 @@ public class Queue {
     private List<String> from;
     private List<String> to;
     private int noofProducts;
+    private LinkedList<Products> product;
 
-    public Queue(String id, List<String> from, List<String> to, int noofProducts) {
+    public Queue(String id, List<String> from, List<String> to, int noofProducts,LinkedList<Products>product) {
         this.id = id;
         this.from = from;
         this.to = to;
         this.noofProducts = noofProducts;
+        this.product=product;
     }
 
+    public List<Products> getProduct() {
+        if (this.product == null) {
+            this.product = new LinkedList<>();
+        }
+          return product;
+    }
+
+    public void setProduct(Products products) {
+        if (this.product == null) {
+            this.product = new LinkedList<>();
+        }
+        this.product.add(products);
+    }
+    public void removeProduct(Products products){
+        if (this.product == null) {
+            this.product = new LinkedList<>();
+        }
+        this.product.remove(products);
+    }
     public String getId() {
         return id;
     }

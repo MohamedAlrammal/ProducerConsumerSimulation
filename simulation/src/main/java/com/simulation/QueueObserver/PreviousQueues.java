@@ -1,5 +1,6 @@
 package com.simulation.QueueObserver;
 
+import com.simulation.Objects.Products;
 import com.simulation.Objects.Queue;
 import com.simulation.returnObjects.ReturnMacines;
 import com.simulation.returnObjects.ReturnQueues;
@@ -19,9 +20,10 @@ public class PreviousQueues implements Observer{
     }
 
     @Override
-    public void update(int numOfProduct) {
+    public void update(int numOfProduct, Products products) {
        for(Queue q:Previous){
            q.setNoofProducts(q.getNoofProducts()+numOfProduct);
+           q.removeProduct(q.getProduct().getFirst());
            for(returnQueue r:returnQueueList){
                if(q.getId().equals(r.getId()))
                    r.setNoOfPruducts(r.getNoOfPruducts()+numOfProduct);

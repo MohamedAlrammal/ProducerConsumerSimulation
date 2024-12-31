@@ -1,6 +1,7 @@
 package com.simulation.MachineObserver;
 
 import com.simulation.Objects.Machine;
+import com.simulation.Objects.Products;
 import com.simulation.returnObjects.ReturnMacines;
 import com.simulation.returnObjects.ReturnQueues;
 import com.simulation.returnObjects.returnMachine;
@@ -17,10 +18,12 @@ public class StateOfMachine implements machineObserver{
     }
 
     @Override
-    public void updateState(boolean State) {
+    public void updateState(boolean State, Products products) {
         for(returnMachine r:returnMachineList){
-            if(r.getId().equals(machineList.getId()))
+            if(r.getId().equals(machineList.getId())) {
                 r.setOn(State);
+                r.setProductColor(products.getNumOfProduct());
+            }
         }
     }
 }

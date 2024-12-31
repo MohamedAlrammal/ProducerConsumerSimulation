@@ -1,5 +1,6 @@
 package com.simulation.QueueObserver;
 
+import com.simulation.Objects.Products;
 import com.simulation.returnObjects.ObjectsAnswer;
 import com.simulation.returnObjects.ReturnMacines;
 import com.simulation.returnObjects.ReturnQueues;
@@ -11,6 +12,7 @@ import java.util.concurrent.BlockingQueue;
 public class ProductStation implements Subject {
     private List<Observer> ObserverQueues = new ArrayList<>();
     private int numOfProduct;
+    private Products products;
 
     @Override
     public void addObserverQueue(Observer observer) {
@@ -20,16 +22,17 @@ public class ProductStation implements Subject {
     @Override
     public void notifyObservers() {
         for (Observer O : ObserverQueues) {
-            O.update(numOfProduct);
+            O.update(numOfProduct,products);
         }
     }
 
-    public void SetNumofProduct(int i, BlockingQueue<ObjectsAnswer> updatesQueue) {
+    public void SetNumofProduct(int i, BlockingQueue<ObjectsAnswer> updatesQueue, Products products) {
         if (ObserverQueues.isEmpty()) {
             System.err.println("ObserverQueues is empty. Skipping notification.");
             return; // Avoid accessing an empty list
         }
         this.numOfProduct = i;
+        this.products=products;
         notifyObservers(); // Notify only if the list is not empty
         ReturnQueues returnQueues = ReturnQueues.getInstance();
         ReturnMacines returnMacines = ReturnMacines.getInstance();

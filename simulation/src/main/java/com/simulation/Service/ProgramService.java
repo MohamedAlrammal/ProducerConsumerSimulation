@@ -9,6 +9,7 @@ import com.simulation.returnObjects.ObjectsAnswer;
 import com.simulation.returnObjects.ReturnMacines;
 import com.simulation.returnObjects.ReturnQueues;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
 import java.util.Random;
@@ -33,8 +34,11 @@ public class ProgramService {
         orginator.setState(objectsRequest);
         careTaker.add(orginator.SaveToMemento());
         Random random = new Random();
-        int num = random.nextInt(20);
-        queues.getQueues().getFirst().setNoofProducts(num);
+        int num = random.nextInt(15);
+
+        for(int i=1;i<=15;i++)
+            queues.getQueues().getFirst().setProduct(new Products(i));
+        queues.getQueues().getFirst().setNoofProducts(15);
         this.queuess=queues;
         this.machiness=machines;
         start=true;
@@ -66,9 +70,14 @@ public class ProgramService {
 
         return update;
     }
-    public void replay(){
+    public ObjectsAnswer replay(){
         orginator.getStateFromMemento(careTaker.getMementoList(0));
         enterData(orginator.getState());
+        try {
+            return getUpdates();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
 

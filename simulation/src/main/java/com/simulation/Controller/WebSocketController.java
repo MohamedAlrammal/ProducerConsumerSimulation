@@ -32,8 +32,8 @@ public class WebSocketController {
         }
         return update;
     }
-    @PostMapping("/replay")
-    public void replay(){
-        programService.replay();
+    @GetMapping("/replay")
+    public ObjectsAnswer replay(){
+        return programService.replay();
     }
 }

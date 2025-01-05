@@ -71,6 +71,36 @@ function SimulationCanvas({nodes ,setNodes,edges , setEdges , queues , setQueues
     setEdges((eds) => eds.filter((edge) => edge.source !== nodeId && edge.target !== nodeId));
   };
 
+  // Save the current nodes and edges as a JSON file
+  const saveToFile = () => {
+    const data = JSON.stringify({ nodes, edges }, null, 2);
+    const blob = new Blob([data], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "simulation-data.json";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  // Load nodes and edges from a JSON file
+  const loadFromFile = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const { nodes: loadedNodes, edges: loadedEdges } = JSON.parse(e.target.result);
+        setNodes(loadedNodes || []);
+        setEdges(loadedEdges || []);
+      } catch (error) {
+        console.error("Error parsing JSON file:", error);
+      }
+    };
+    reader.readAsText(file);
+  };
+
   
   return (
     <div style={{ height: "100vh" }}>
@@ -103,6 +133,18 @@ function SimulationCanvas({nodes ,setNodes,edges , setEdges , queues , setQueues
         <button className="queueButton" onClick={addQueue}>Add Queue</button>
         <button className="machineButton" onClick={addMachine}>Add Machine</button>
       </div>
+      <div className="save-load">
+      <button className="saveButton" onClick={saveToFile}>
+          Save to File
+        </button>
+        <label className="loadButton">
+          Load from file
+        <input type="file" name="Load From File" accept=".json" onChange={loadFromFile} style={{ display: "none" }} />
+        </label>
+          
+        
+      </div>
+      
     </div>
   );
 }

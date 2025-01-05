@@ -1,182 +1,269 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import SimulationCanvas from "./components/simulation/SimulationCanvas";
 import SimulationControls from "./components/controls/SimulationControls";
-import "./App.css"
-import { useState,useRef ,useEffect} from "react";
 import { initialNodes } from "./components/simulation/index";
+import "./App.css";
 
 
-
-
-  
 function App() {
-  const [nodes, setNodes] = useState(initialNodes); // Single source of truth for nodes
+  // Keep separate state variables to match SimulationCanvas expectations
+  const [nodes, setNodes] = useState(initialNodes);
   const [edges, setEdges] = useState([]);
-  const [queues, setQueues] = useState([]); // Derived state
-  const [machines, setMachines] = useState([]); // Derived state
-  const noOfProducts = localStorage.getItem("noOfProducts");
-  
+  const [queues, setQueues] = useState([]);
+  const [machines, setMachines] = useState([]);
+  const [start, setStart] = useState("off");
 
-  const [start,setStart] = useState("off");
+  const pollingIntervalRef = useRef(null);
+  const abortControllerRef = useRef(null);
 
-
+  // Format data for backend exactly as in original code
   function mapToBackendFormat(nodes, edges) {
     const queues = [];
     const machines = [];
-  
-    // Map nodes to queues and machines
     nodes.forEach((node) => {
       if (node.type === "Queue-Node") {
-        if(node.id ==="q0"){
-          queues.push({
-            id: node.id,
-            from: edges
-              .filter((edge) => edge.target === node.id)
-              .map((edge) => edge.source), // Find incoming edges
-            to: edges
-              .filter((edge) => edge.source === node.id)
-              .map((edge) => edge.target), // Find outgoing edges
-            noofProducts: localStorage.getItem("noOfProducts"), // Default to 0 if undefined
-          });
-        }else{
-          queues.push({
-            id: node.id,
-            from: edges
-              .filter((edge) => edge.target === node.id)
-              .map((edge) => edge.source), // Find incoming edges
-            to: edges
-              .filter((edge) => edge.source === node.id)
-              .map((edge) => edge.target), // Find outgoing edges
-            noofProducts: 0, // Default to 0 if undefined
-          });
-        }
-        
+        queues.push({
+          id: node.id,
+          from: edges.filter((edge) => edge.target === node.id).map((edge) => edge.source),
+          to: edges.filter((edge) => edge.source === node.id).map((edge) => edge.target),
+          noofProducts: node.id === "q0" ? localStorage.getItem("noOfProducts") || 0 : 0,
+        });
       } else if (node.type === "Machine-Node") {
         machines.push({
           id: node.id,
-          from: edges
-            .filter((edge) => edge.target === node.id)
-            .map((edge) => edge.source), // Find incoming edges
-          to: edges
-            .filter((edge) => edge.source === node.id)
-            .map((edge) => edge.target), // Find outgoing edges
+          from: edges.filter((edge) => edge.target === node.id).map((edge) => edge.source),
+          to: edges.filter((edge) => edge.source === node.id).map((edge) => edge.target),
         });
       }
     });
-  
-    // Return the formatted JSON
     return { queues, machines };
   }
 
-  const sentBackendData = mapToBackendFormat(nodes, edges);
+  const fetchBackendData = async () => {
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
 
-  const updateNodesFromBackend = async () => {
-    try {
-      const response = await fetch("http://localhost:8080/api/producer/start"); // Replace with actual URL
-      const backendData = await response.json();
+    if (true) {
+      try {
+        const response = await fetch("http://localhost:8080/api/producer/start", {
+          signal: controller.signal,
+        });
 
-      // Update nodes based on backend data
-      const updatedNodes = nodes.map((node) => {
-        if (node.type === "Queue-Node") {
-          const queueData = backendData.queues.find((queue) => queue.id === node.id);
-          if (queueData) {
-            return {
-              ...node,
-              data: {
-                ...node.data,
-                products: queueData.noOfPruducts, // Update number of products
-              },
-            };
-          }
-        } else if (node.type === "Machine-Node") {
-          const machineData = backendData.machines.find((machine) => machine.id === node.id);
-          if (machineData) {
-            return {
-              ...node,
-              data: {
-                ...node.data,
-                status: machineData.on ? "on" : "off", // Update status
-                color: machineData.productColor, // Update product color
-              },
-            };
-          }
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        } else {
+          console.log("START");
         }
-        return node; // Return unchanged node if not found in backend response
-      });
 
-      setNodes(updatedNodes); // Update React state
-    } catch (error) {
-      console.error("Failed to fetch or update nodes:", error);
+        const backendData = await response.json();
+
+        setNodes((currentNodes) =>
+          currentNodes.map((node) => {
+            if (node.type === "Queue-Node") {
+              const queueData = backendData.queues.find((queue) => queue.id === node.id);
+              return queueData
+                ? { ...node, data: { ...node.data, products: queueData.noOfPruducts } }
+                : node;
+            } else if (node.type === "Machine-Node") {
+              const machineData = backendData.machines.find((machine) => machine.id === node.id);
+              return machineData
+                ? {
+                  ...node,
+                  data: {
+                    ...node.data,
+                    status: machineData.on ? "on" : "off",
+                    color: machineData.productColor,
+                  },
+                }
+                : node;
+            }
+            return node;
+          })
+        );
+      } catch (error) {
+        if (error.name === "AbortError") {
+          console.log("Fetch request cancelled");
+        } else {
+          console.error("Failed to fetch or update nodes:", error);
+        }
+      }
     }
   };
 
- 
-  if(start==="on"){
-    updateNodesFromBackend();
-  }
-  
+  const validateGraph = (nodes, edges) => {
+    const machines = nodes.filter((node) => node.type === "Machine-Node");
+    const queues = nodes.filter((node) => node.type === "Queue-Node");
 
-  
-  const handleStart = async() => {
-    console.log(JSON.stringify(sentBackendData,null,2))
-    console.log(nodes);
+    // Create a map of node connections
+    const connections = {};
+    edges.forEach((edge) => {
+      if (!connections[edge.source]) connections[edge.source] = { out: [], in: [] };
+      if (!connections[edge.target]) connections[edge.target] = { out: [], in: [] };
+      connections[edge.source].out.push(edge.target);
+      connections[edge.target].in.push(edge.source);
+    });
+
+    // 1. Validate all machines have a queue before and after them
+    for (const machine of machines) {
+      const incoming = connections[machine.id]?.in || [];
+      const outgoing = connections[machine.id]?.out || [];
+      const hasIncomingQueue = incoming.some((id) => queues.some((q) => q.id === id));
+      const hasOutgoingQueue = outgoing.some((id) => queues.some((q) => q.id === id));
+      if (!hasIncomingQueue || !hasOutgoingQueue) {
+        return { valid: false, message: `Machine ${machine.data.label} must have a queue before and after it.` };
+      }
+    }
+
+    // 2. Validate the first queue is connected to "start"
+    const firstQueue = queues.find((queue) => queue.id === "q0");
+    if (!firstQueue || !(connections[firstQueue.id]?.in || []).includes("start")) {
+      return { valid: false, message: "The first queue must be connected to the start node." };
+    }
+
+    // 3. Validate the last queue is connected to "end"
+    const lastQueue = queues[queues.length - 1];
+    if (!lastQueue || !(connections[lastQueue.id]?.out || []).includes("end")) {
+      return { valid: false, message: "The last queue must be connected to the end node." };
+    }
+
+    // 4. Ensure no two queues are connected to each other
+    for (const edge of edges) {
+      const sourceIsQueue = queues.some((q) => q.id === edge.source);
+      const targetIsQueue = queues.some((q) => q.id === edge.target);
+      if (sourceIsQueue && targetIsQueue) {
+        return { valid: false, message: "No two queues can be connected to each other." };
+      }
+    }
+
+    // If all validations pass
+    return { valid: true, message: "Graph is valid." };
+  };
+
+
+  const handleReady = async () => {
+    if (pollingIntervalRef.current) {
+      clearInterval(pollingIntervalRef.current);
+      pollingIntervalRef.current = null;
+
+    }
+    
+    const validation = validateGraph(nodes, edges);
+    if (!validation.valid) {
+      alert(validation.message); // Show an error message
+      return;
+    }
+    const backendData = mapToBackendFormat(nodes, edges);
+
     try {
       const response = await fetch("http://localhost:8080/api/producer/enter", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(sentBackendData), // Send mapped data to backend
+        body: JSON.stringify(backendData),
+
       });
-  
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
+      } else {
+        console.log("pressed ready2");
       }
-  
-      
-      console.log("Backend Response:");
-  
-      // Update nodes based on backend response (optional)
-      setStart("on");
+
     } catch (error) {
       console.error("Error sending data to backend:", error);
     }
-  
+  }
+
+  const handleStart = async () => {
+    const backendData = mapToBackendFormat(nodes, edges);
+    console.log("Sending to backend:", JSON.stringify(backendData, null, 2));
+    pollingIntervalRef.current = setInterval(fetchBackendData, 1000);
+
+
   };
 
-  
-  const handleStop = () => {
+  const handleStop = async () => {
     setStart("off");
+    const backendData = mapToBackendFormat(nodes, edges);
+    try {
+      const response = await fetch("http://localhost:8080/api/producer/enter", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(backendData),
+      });
+    } catch (error) {
+      console.error("Error sending data to backend:", error);
+    }
 
-    const updatedNodes = nodes.map((node) => {
-       if (node.type === "Machine-Node") {
-       
-          return {
-            ...node,
-            data: {
-              ...node.data,
-              status:"off", // Update status
-            },
-          };
-        
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
+    }
+
+    if (pollingIntervalRef.current) {
+      clearInterval(pollingIntervalRef.current);
+      pollingIntervalRef.current = null;
+    }
+
+    setNodes((currentNodes) =>
+      currentNodes.map((node) =>
+        node.type === "Machine-Node"
+          ? { ...node, data: { ...node.data, status: "off" } }
+          : node
+      )
+    );
+  };
+
+  const handleRestart = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/api/producer/replay", {
+        method: "POST",
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      } else {
+        console.log("pressed ready2");
       }
-      return node; // Return unchanged node if not found in backend response
-    });
 
-    setNodes(updatedNodes); // Update React state
-    
+    } catch (error) {
+      console.error("Error sending data to backend:", error);
+    }
   };
 
-  const handleRestart = () => {
-    console.log(start)
-    
-  };
+  useEffect(() => {
+    return () => {
+      if (pollingIntervalRef.current) {
+        clearInterval(pollingIntervalRef.current);
+      }
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
+  }, []);
+
   return (
     <div>
-      <SimulationCanvas nodes={nodes} setNodes={setNodes} edges={edges} setEdges={setEdges} machines={machines} setMachines={setMachines} queues={queues} setQueues={setQueues} />
-      <SimulationControls className="controls" onStart={handleStart} onStop={handleStop} onRestart={handleRestart} />
+      <SimulationCanvas
+        nodes={nodes}
+        setNodes={setNodes}
+        edges={edges}
+        setEdges={setEdges}
+        machines={machines}
+        setMachines={setMachines}
+        queues={queues}
+        setQueues={setQueues}
+      />
+      <SimulationControls
+        className="controls"
+        onReady={handleReady}
+        onStart={handleStart}
+        onRestart={handleRestart}
+      />
     </div>
-
   );
 }
 

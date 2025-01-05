@@ -3,7 +3,7 @@
   }
 
   .react-flow__background{
-    background-color: #FFF0DC;
+    background-color: rgb(212, 235, 248,0.5);
   }
 
   .buttons{
@@ -15,13 +15,13 @@
   .queueButton{
     width: 45%;
     height: 45px;
-    background-color: #131010;
+    background-color: #1F509A;
     border: none;
     outline: none;
     border-radius: 40px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     cursor: pointer;
-    color: #FFF0DC;
+    color: #E38E49;
     font-size: 16px;
     font-weight: 700;
   }
@@ -30,23 +30,29 @@
     width: 45%;
     margin-left: 10%;
     height: 45px;
-    background-color: #543A14;
+    background-color: #1F509A;
     border: none;
     outline: none;
     border-radius: 40px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     cursor: pointer;
-    color: #FFF0DC;
+    color: #E38E49;
     font-size: 16px;
     font-weight: 700;
   }
 
+  .machineButton:hover,
+  .queueButton:hover{
+    background-color: #b0ddf8;
+    transition: 0.3s;
+  }
+
   .delete-nodes{
     position: fixed;
-    background-color:rgb(84, 58, 20,0.7);
+    background-color:rgb(31, 80, 154,0.5);
     backdrop-filter: blur(20px);
     left: 10px;
-    top: 100px;
+    top: 90px;
     border: 2px solid black;
     border-radius: 20px;
     width: 200px;
@@ -62,17 +68,64 @@
     width: 45%;
     height: 25px;
     margin-bottom: 10px;
-    background-color: #131010;
+    background-color: #1F509A;
     border: none;
     outline: none;
     border-radius: 40px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     cursor: pointer;
-    color: #FFF0DC;
+    color: #E38E49;
     font-size: 16px;
     font-weight: 700;
   }
 
   .delete-nodes button:hover{
-    background-color: #3d3838;
+    background-color: #b0ddf8;
+    transition: 0.3s;
+  }
+
+  .save-load{
+    position: fixed;
+    background-color:rgb(31, 80, 154,0.5);
+    backdrop-filter: blur(20px);
+    left: 10px;
+    top: 500px;
+    border: 2px solid black;
+    border-radius: 20px;
+    width: 200px;
+    height: 70px;
+  }
+
+  .saveButton{
+    width: 90%;
+    height: 25px;
+    margin-left: 10px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    background-color: #1F509A;
+    border: none;
+    outline: none;
+    border-radius: 40px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    color: #E38E49;
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  .loadButton{
+    padding:0 35px ;
+    height: 25px;
+    margin-left: 10px;
+    margin-top: 0px;
+    margin-bottom: 10px;
+    background-color: #1F509A;
+    border: none;
+    outline: none;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    color: #E38E49;
+    font-size: 16px;
+    font-weight: 700;
   }

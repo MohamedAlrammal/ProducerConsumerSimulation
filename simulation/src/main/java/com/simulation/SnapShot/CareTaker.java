@@ -14,6 +14,6 @@ public class CareTaker {
         if (mementoList.isEmpty()) {
             throw new IllegalStateException("No mementos available.");
         }
-        return mementoList.getFirst();
+        return mementoList.getLast();
     }
 }

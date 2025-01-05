@@ -2,15 +2,16 @@
     position: fixed;
     bottom: 10px;
     border: 2px solid black;
-    background-color:rgb(84, 58, 20,0.7);
+    background-color:rgb(31, 80, 154,0.5);
     backdrop-filter: blur(20px);
     border-radius: 20px;
     width: 600px;
 }
 
 .controls button{
-    background-color: #131010;
-    color: #FFF0DC;
+    background-color: #1F509A;
+    color: #E38E49;
+    font-weight: 700;
     cursor: pointer;
     height: 100%;
     width: 180px;
@@ -18,10 +19,12 @@
     margin-right: 10px;
     margin-bottom: 3px;
     border-radius: 20px;
+    border: 0;
 }
 
 .controls button:hover{
-    background-color: #3d3838;
+    background-color: #b0ddf8;
+    transition: 0.3s;
 }
 
 

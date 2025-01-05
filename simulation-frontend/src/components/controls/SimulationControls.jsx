@@ -1,11 +1,11 @@
 import React from "react";
 import"./Styling/SimulationControls.css";
 
-function SimulationControls({ onStart, onStop, onRestart }) {
+function SimulationControls({ onReady ,onStart, onRestart }) {
   return (
     <div className="controls">
+      <button className="Ready" onClick={onReady}>Ready / Stop</button>
       <button className="start" onClick={onStart}>Start</button>
-      <button className="stop" onClick={onStop}>Stop</button>
       <button className="restart" onClick={onRestart}>Restart</button>
     </div>
   );

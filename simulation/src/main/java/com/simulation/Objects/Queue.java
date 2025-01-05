@@ -69,6 +69,15 @@ public class Queue {
     public void setNoofProducts(int noofProducts) {
         this.noofProducts = noofProducts;
     }
+    public Queue deepCopy() {
+        List<String> copiedFrom = (from != null) ? new LinkedList<>(from) : new LinkedList<>();
+        List<String> copiedTo = (to != null) ? new LinkedList<>(to) : new LinkedList<>();
+
+        // Create a new Queue instance with copied values
+        LinkedList<Products> copiedProducts = (product != null) ? new LinkedList<>(product) : new LinkedList<>();
+
+        return new Queue(id, copiedFrom, copiedTo, noofProducts, copiedProducts);
+    }
 }
 
 

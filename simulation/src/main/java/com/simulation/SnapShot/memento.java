@@ -4,7 +4,7 @@ import com.simulation.Objects.ObjectsRequest;
 import com.simulation.returnObjects.ObjectsAnswer;
 
 public class memento {
-    private ObjectsRequest state;
+    private final ObjectsRequest state;
 
     public memento(ObjectsRequest state) {
         this.state = state;

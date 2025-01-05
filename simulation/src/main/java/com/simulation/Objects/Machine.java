@@ -1,5 +1,6 @@
 package com.simulation.Objects;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Machine {
@@ -35,5 +36,11 @@ public class Machine {
 
     public void setTo(List<String> to) {
         this.to = to;
+    }
+    public Machine deepCopy() {
+        // Create a new instance with a deep copy of 'from' and 'to' lists
+        List<String> copiedFrom = new ArrayList<>(from);
+        List<String> copiedTo = new ArrayList<>(to);
+        return new Machine(id, copiedFrom, copiedTo);
     }
 }

@@ -27,6 +27,10 @@ public class ReturnMacines {
     }
 
     public void setMachines(List<Machine> machinesList) {
+        if(machinesList==null){
+            this.machines=new ArrayList<>();
+        return;
+    }
         for (Machine m : machinesList) {
             this.machines.add(new returnMachine(m.getId(), false, 0));
         }

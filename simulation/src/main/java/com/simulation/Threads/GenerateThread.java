@@ -36,6 +36,19 @@ public class GenerateThread {
 
         }
     }
+    public void stopThreads() {
+        for (MachineThread task : tasks) {
+            task.stopThread();
+        }
+        for (Thread thread : threads) {
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                System.err.println("Thread interruption during stop: " + e.getMessage());
+            }
+        }
+        System.out.println("All threads stopped.");
+    }
 
 }
 

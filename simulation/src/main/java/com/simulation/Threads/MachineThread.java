@@ -22,6 +22,7 @@ public class MachineThread implements Runnable{
     private final CountDownLatch latch ;
     private final BlockingQueue<ObjectsAnswer> updatesQueue;
     private Products products;
+    private volatile boolean running = true;
     public MachineThread(Machine machine, List<Queue> queues, BlockingQueue<ObjectsAnswer> updatesQueue, CountDownLatch latch) {
         this.machine = machine;
         this.queues=queues;
@@ -32,7 +33,7 @@ public class MachineThread implements Runnable{
     @Override
     public void run() {
 
-        while(true){
+        while(running){
 
             for(Queue q:queues) {
                for(int i=0;i<q.getTo().size();i++) {
@@ -83,5 +84,8 @@ public class MachineThread implements Runnable{
                 }
             }check= false;
         }
+    }
+    public void stopThread() {
+        running = false;
     }
 }

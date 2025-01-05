@@ -18,9 +18,9 @@ import java.util.concurrent.TimeUnit;
 public class WebSocketController {
     @Autowired
     private ProgramService programService;
+
     @PostMapping("/enter")
     public void enterData(@RequestBody ObjectsRequest objectsRequest) {
-
         programService.enterData(objectsRequest);
     }
     @GetMapping("/start")
@@ -28,12 +28,12 @@ public class WebSocketController {
         ObjectsAnswer update = programService.getUpdates();
         if (update == null) {
             throw new RuntimeException("No updates available after timeout");
-            // Or return some default response
         }
         return update;
     }
-    @GetMapping("/replay")
-    public ObjectsAnswer replay(){
-        return programService.replay();
+    @PostMapping ("/replay")
+    public void replay(){
+         programService.replay();
     }
+
 }

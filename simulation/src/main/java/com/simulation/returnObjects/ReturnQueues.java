@@ -27,7 +27,10 @@ public class ReturnQueues {
     }
 
     public void setQueues(List<Queue> queueList) {
-
+         if(queueList==null) {
+             this.queues = new ArrayList<>();
+             return;
+         }
         for (Queue q : queueList) {
             this.queues.add(new returnQueue(q.getId(), q.getNoofProducts()));
         }

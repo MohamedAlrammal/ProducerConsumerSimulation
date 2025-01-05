@@ -3,15 +3,11 @@ package com.simulation.Service;
 import com.simulation.Objects.*;
 import com.simulation.SnapShot.CareTaker;
 import com.simulation.SnapShot.Orginator;
-import com.simulation.SnapShot.SnapShotClient;
 import com.simulation.Threads.GenerateThread;
 import com.simulation.returnObjects.ObjectsAnswer;
 import com.simulation.returnObjects.ReturnMacines;
 import com.simulation.returnObjects.ReturnQueues;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-
-import java.util.List;
 import java.util.Random;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CountDownLatch;
@@ -24,21 +20,30 @@ public class ProgramService {
     private  queues queuess;
     private  machines machiness;
     private static boolean start=true;
-   private Orginator orginator;
-   private CareTaker careTaker;
-    public void enterData(ObjectsRequest objectsRequest){
-        queues queues =new queues(objectsRequest.getQueues());
-        machines machines =new machines(objectsRequest.getMachines());
-        this.orginator =new Orginator();
-        this. careTaker =new CareTaker();
-        orginator.setState(objectsRequest);
-        careTaker.add(orginator.SaveToMemento());
-        Random random = new Random();
-        int num = random.nextInt(15);
+    private final Orginator orginator=new Orginator();
+    private final CareTaker careTaker=new CareTaker();
+    private GenerateThread generateThread;
+    private ObjectsRequest ojectsRequest ;
 
-        for(int i=1;i<=15;i++)
+    public void enterData(ObjectsRequest objectsRequest){
+        ObjectsRequest objectsRequest1 = objectsRequest.deepCopy();
+        ojectsRequest = objectsRequest.deepCopy();
+        if(generateThread!=null)
+              generateThread.stopThreads();
+        queuess=null;   machiness=null;
+        ReturnQueues returnQueues = ReturnQueues.getInstance();
+        ReturnMacines returnMacines = ReturnMacines.getInstance();
+        returnQueues.setQueues(null);   returnMacines.setMachines(null);
+        if(!updates.isEmpty())
+            updates.clear();
+        queues queues =new queues(objectsRequest1.getQueues());
+        machines machines =new machines(objectsRequest1.getMachines());
+        Random random = new Random();
+        int num = random.nextInt(5);
+
+        for(int i=1;i<=5;i++)
             queues.getQueues().getFirst().setProduct(new Products(i));
-        queues.getQueues().getFirst().setNoofProducts(15);
+        queues.getQueues().getFirst().setNoofProducts(5);
         this.queuess=queues;
         this.machiness=machines;
         start=true;
@@ -52,7 +57,7 @@ public class ProgramService {
            ReturnMacines returnMacines = ReturnMacines.getInstance();
            returnQueues.setQueues(queuess.getQueues());
            returnMacines.setMachines(machiness.getMachines());
-           GenerateThread generateThread = new GenerateThread(machiness.getMachines(), queuess.getQueues(), updates, latch);
+           generateThread = new GenerateThread(machiness.getMachines(), queuess.getQueues(), updates, latch);
            generateThread.createThreads();
            ObjectsAnswer objectsAnswer = new ObjectsAnswer(returnQueues.getQueues(), returnMacines.getMachines());
        } start=false;
@@ -70,13 +75,24 @@ public class ProgramService {
 
         return update;
     }
-    public ObjectsAnswer replay(){
-        orginator.getStateFromMemento(careTaker.getMementoList(0));
-        enterData(orginator.getState());
-        try {
-            return getUpdates();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+
+    public void replay(){
+        if(generateThread!=null)
+            generateThread.stopThreads();
+        queuess=null;   machiness=null;
+        ReturnQueues returnQueues = ReturnQueues.getInstance();
+        ReturnMacines returnMacines = ReturnMacines.getInstance();
+        returnQueues.setQueues(null);   returnMacines.setMachines(null);
+        orginator.setState(new ObjectsRequest(ojectsRequest.getQueues(),ojectsRequest.getMachines()));
+        careTaker.add(orginator.SaveToMemento());
+        enterData(careTaker.getMementoList().getState());
+    }
+    public void stop() {
+        if (generateThread != null) {
+            generateThread.stopThreads(); // Stop all threads in GenerateThread
+            System.out.println("All threads stopped.");
+        } else {
+            System.out.println("No threads to stop.");
         }
     }
 }

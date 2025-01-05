@@ -1,6 +1,7 @@
 package com.simulation.Objects;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ObjectsRequest {
@@ -27,5 +28,18 @@ public class ObjectsRequest {
 
     public void setMachines(List<Machine> machines) {
         this.machines = machines;
+    }
+    public ObjectsRequest deepCopy() {
+        List<Queue> copiedQueues = new ArrayList<>();
+        for (Queue queue : queues) {
+            copiedQueues.add(queue.deepCopy());
+        }
+
+        List<Machine> copiedMachines = new ArrayList<>();
+        for (Machine machine : machines) {
+            copiedMachines.add(machine.deepCopy()); // Assume Machine has a deepCopy method
+        }
+
+        return new ObjectsRequest(copiedQueues, copiedMachines);
     }
 }

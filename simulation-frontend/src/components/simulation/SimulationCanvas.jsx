@@ -71,9 +71,7 @@ function SimulationCanvas({nodes ,setNodes,edges , setEdges , queues , setQueues
     setEdges((eds) => eds.filter((edge) => edge.source !== nodeId && edge.target !== nodeId));
   };
 
-  console.log(edges);
-  console.log(queues)
-
+  
   return (
     <div style={{ height: "100vh" }}>
       

@@ -38,12 +38,8 @@ public class ProgramService {
             updates.clear();
         queues queues =new queues(objectsRequest1.getQueues());
         machines machines =new machines(objectsRequest1.getMachines());
-        Random random = new Random();
-        int num = random.nextInt(5);
-
-        for(int i=1;i<=5;i++)
+        for(int i=1;i<=queues.getQueues().getFirst().getNoofProducts();i++)
             queues.getQueues().getFirst().setProduct(new Products(i));
-        queues.getQueues().getFirst().setNoofProducts(5);
         this.queuess=queues;
         this.machiness=machines;
         start=true;
@@ -66,7 +62,6 @@ public class ProgramService {
             System.out.println("Threads did not complete in time");
             throw new RuntimeException("No updates available after timeout");
         }
-
         ObjectsAnswer update = updates.take();
         if (update == null) {
             System.out.println("No updates received after timeout");

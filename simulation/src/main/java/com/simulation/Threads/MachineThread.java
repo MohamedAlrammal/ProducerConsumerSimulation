@@ -9,6 +9,7 @@ import com.simulation.returnObjects.ObjectsAnswer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -23,6 +24,7 @@ public class MachineThread implements Runnable{
     private final BlockingQueue<ObjectsAnswer> updatesQueue;
     private Products products;
     private volatile boolean running = true;
+
     public MachineThread(Machine machine, List<Queue> queues, BlockingQueue<ObjectsAnswer> updatesQueue, CountDownLatch latch) {
         this.machine = machine;
         this.queues=queues;
@@ -32,7 +34,8 @@ public class MachineThread implements Runnable{
 
     @Override
     public void run() {
-
+             Random random = new Random();
+             int randomSeconds;
         while(running){
 
             for(Queue q:queues) {
@@ -50,6 +53,11 @@ public class MachineThread implements Runnable{
                    }
                }
             }
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
             if(check) {
 
                 ObserverClient observerClient = new ObserverClient();
@@ -61,7 +69,8 @@ public class MachineThread implements Runnable{
                 MoQueues.clear();
                 System.out.println("machine done");
                 try {
-                    Thread.sleep(5000);
+                    randomSeconds = 2 + random.nextInt(3);
+                    Thread.sleep(randomSeconds*1000);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 } latch.countDown();

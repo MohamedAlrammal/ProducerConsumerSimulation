@@ -7,6 +7,9 @@ public class ObjectsAnswer {
     private List<returnQueue> queues;
     private List<returnMachine> machines;
 
+    public ObjectsAnswer() {
+    }
+
     public ObjectsAnswer(List<returnQueue> queues, List<returnMachine> machines) {
         this.queues = queues;
         this.machines = machines;

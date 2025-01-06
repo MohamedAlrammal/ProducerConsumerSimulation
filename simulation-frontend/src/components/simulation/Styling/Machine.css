@@ -2,7 +2,7 @@
     border: 2px solid  black;
     border-radius: 100%;
     padding: 10px;
-    background-color: rgb(227, 142, 73,0.8);
+    background-color: rgba(33, 33, 33, 0.8);
     backdrop-filter: blur(20px);
     color: #fff;
     width: 100px;

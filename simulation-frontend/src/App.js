@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
+import axios from "axios";
 import SimulationCanvas from "./components/simulation/SimulationCanvas";
 import SimulationControls from "./components/controls/SimulationControls";
 import { initialNodes } from "./components/simulation/index";
 import "./App.css";
 
-
 function App() {
-  // Keep separate state variables to match SimulationCanvas expectations
   const [nodes, setNodes] = useState(initialNodes);
   const [edges, setEdges] = useState([]);
   const [queues, setQueues] = useState([]);
@@ -16,7 +15,7 @@ function App() {
   const pollingIntervalRef = useRef(null);
   const abortControllerRef = useRef(null);
 
-  // Format data for backend exactly as in original code
+  // Format data for backend
   function mapToBackendFormat(nodes, edges) {
     const queues = [];
     const machines = [];
@@ -43,49 +42,41 @@ function App() {
     const controller = new AbortController();
     abortControllerRef.current = controller;
 
-    if (true) {
-      try {
-        const response = await fetch("http://localhost:8080/api/producer/start", {
-          signal: controller.signal,
-        });
+    try {
+      const response = await axios.get("http://localhost:8080/api/producer/start", {
+        signal: controller.signal,
+      });
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        } else {
-          console.log("START");
-        }
+      const backendData = response.data;
 
-        const backendData = await response.json();
-
-        setNodes((currentNodes) =>
-          currentNodes.map((node) => {
-            if (node.type === "Queue-Node") {
-              const queueData = backendData.queues.find((queue) => queue.id === node.id);
-              return queueData
-                ? { ...node, data: { ...node.data, products: queueData.noOfPruducts } }
-                : node;
-            } else if (node.type === "Machine-Node") {
-              const machineData = backendData.machines.find((machine) => machine.id === node.id);
-              return machineData
-                ? {
-                  ...node,
-                  data: {
-                    ...node.data,
-                    status: machineData.on ? "on" : "off",
-                    color: machineData.productColor,
-                  },
-                }
-                : node;
-            }
-            return node;
-          })
-        );
-      } catch (error) {
-        if (error.name === "AbortError") {
-          console.log("Fetch request cancelled");
-        } else {
-          console.error("Failed to fetch or update nodes:", error);
-        }
+      setNodes((currentNodes) =>
+        currentNodes.map((node) => {
+          if (node.type === "Queue-Node") {
+            const queueData = backendData.queues.find((queue) => queue.id === node.id);
+            return queueData
+              ? { ...node, data: { ...node.data, products: queueData.noOfPruducts } }
+              : node;
+          } else if (node.type === "Machine-Node") {
+            const machineData = backendData.machines.find((machine) => machine.id === node.id);
+            return machineData
+              ? {
+                ...node,
+                data: {
+                  ...node.data,
+                  status: machineData.on ? "on" : "off",
+                  color: machineData.productColor,
+                },
+              }
+              : node;
+          }
+          return node;
+        })
+      );
+    } catch (error) {
+      if (axios.isCancel(error)) {
+        console.log("Request canceled");
+      } else {
+        console.error("Error fetching backend data:", error);
       }
     }
   };
@@ -139,63 +130,44 @@ function App() {
     return { valid: true, message: "Graph is valid." };
   };
 
-
   const handleReady = async () => {
     if (pollingIntervalRef.current) {
       clearInterval(pollingIntervalRef.current);
       pollingIntervalRef.current = null;
-
     }
-    
+
     const validation = validateGraph(nodes, edges);
     if (!validation.valid) {
-      alert(validation.message); // Show an error message
+      alert(validation.message);
       return;
     }
+
     const backendData = mapToBackendFormat(nodes, edges);
 
     try {
-      const response = await fetch("http://localhost:8080/api/producer/enter", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(backendData),
-
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      } else {
-        console.log("pressed ready2");
-      }
-
+      const response = await axios.post("http://localhost:8080/api/producer/enter", backendData);
+      console.log("Ready response:", response.data);
     } catch (error) {
       console.error("Error sending data to backend:", error);
     }
-  }
+  };
 
   const handleStart = async () => {
     const backendData = mapToBackendFormat(nodes, edges);
     console.log("Sending to backend:", JSON.stringify(backendData, null, 2));
+
     pollingIntervalRef.current = setInterval(fetchBackendData, 1000);
-
-
   };
 
   const handleStop = async () => {
     setStart("off");
     const backendData = mapToBackendFormat(nodes, edges);
+
     try {
-      const response = await fetch("http://localhost:8080/api/producer/enter", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(backendData),
-      });
+      const response = await axios.post("http://localhost:8080/api/producer/stop", backendData);
+      console.log("Stop response:", response.data);
     } catch (error) {
-      console.error("Error sending data to backend:", error);
+      console.error("Error sending stop request to backend:", error);
     }
 
     if (abortControllerRef.current) {
@@ -219,18 +191,10 @@ function App() {
 
   const handleRestart = async () => {
     try {
-      const response = await fetch("http://localhost:8080/api/producer/replay", {
-        method: "POST",
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      } else {
-        console.log("pressed ready2");
-      }
-
+      const response = await axios.post("http://localhost:8080/api/producer/replay");
+      console.log("Restart response:", response.data);
     } catch (error) {
-      console.error("Error sending data to backend:", error);
+      console.error("Error sending restart request to backend:", error);
     }
   };
 

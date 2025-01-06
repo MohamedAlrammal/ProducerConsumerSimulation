@@ -15,7 +15,7 @@ function EndQueue({ data}) {
       />
       <div>
         {data.label && <p>{data.label}</p>}
-        <label htmlFor="text">Products Finished: </label>
+        
         
       </div>
     </div>
